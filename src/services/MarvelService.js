@@ -24,11 +24,13 @@ class MarvelService {
 
     _transformCharacter = (char) => {
         return {
+            id:char.id,
             name: char.name,
             description: char.description ? char.description.length > 150 ? char.description.slice(0, 160) + '...' : char.description: "NO DESCRIPTION. COMEBACK LATER",
             thumbnail: `${char.thumbnail.path}.${char.thumbnail.extension}`,
             homepage: char.urls[0].url,
-            wiki: char.urls[1].url
+            wiki: char.urls[1].url,
+            comics: char.comics.items.length > 9 ? char.comics.items.slice(0, 10) : char.comics.items
         }
     }
 }
