@@ -2,6 +2,7 @@ import { Component } from 'react';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import MarvelService from '../../services/MarvelService';
 import Spinner from '../spinner/Spinner';
+import PropTypes from 'prop-types'; // ES6
 
 import './charList.scss';
 
@@ -10,16 +11,31 @@ class CharList extends Component {
     state = {
         charList: [],
         loading: true,
-        error: false
+        error: false,
+        newItemLoading: false,
+        offset: 200,
+        charEnded: false,
     }
 
     marvelService = new MarvelService();
 
     componentDidMount() {
-        this.marvelService.getAllCharacters()
+        this.onRequest();
+    }
+
+    onRequest = (offset) => {
+        this.onCharListLoading();
+        this.marvelService.getAllCharacters(offset)
             .then(this.onCharListLoaded)
             .catch(this.onError)
     }
+
+    onCharListLoading = () => {
+        this.setState({
+            newItemLoading: true
+        })
+    }
+
     onError = () => {
         this.setState({
             loading: false,
@@ -27,11 +43,18 @@ class CharList extends Component {
         })
     }    
 
-    onCharListLoaded = (charList) => {
-        this.setState({
-            charList,
+    onCharListLoaded = (newCharList) => {
+        let ended = false;
+        if (newCharList.length < 9) {
+            ended = true; 
+        }
+        this.setState(({charList, offset}) => ({
+            charList:[...charList, ...newCharList],
             loading: false,
-        })
+            newItemLoading: false,
+            offset: offset + 9,
+            charEnded: ended
+        }))
     }
 
 
@@ -44,9 +67,12 @@ class CharList extends Component {
 
             return (
             <li 
-                className="char__item"
+                className='char__item'
                 key={item.id}
-                onClick={() => this.props.onCharSelected(item.id)}>
+                tabIndex={0}
+                onClick={() => {this.props.onCharSelected(item.id)}}
+                onFocus={() => this.props.onCharSelected(item.id)}
+                >
                     <img src={item.thumbnail} alt={item.name} style={imgStyle}/>
                     <div className="char__name">{item.name}</div>
             </li>
@@ -61,7 +87,7 @@ class CharList extends Component {
     }
 
     render() {
-        const {charList, loading, error} = this.state;
+        const {charList, loading, error, newItemLoading, offset, charEnded} = this.state;
 
         const items = this.renderListItems(charList);
 
@@ -75,12 +101,21 @@ class CharList extends Component {
                 {spinner}
                 {errorMessage}
                 {content}
-                <button className="button button__main button__long">
+                <button 
+                    className="button button__main button__long"
+                    disabled={newItemLoading}
+                    onClick={() => this.onRequest(offset)}
+                    style={{'display': charEnded ? 'none' : 'block'}}
+                    >
                     <div className="inner">load more</div>
                 </button>
             </div>
         )
     }
+}
+
+CharList.propTypes = {
+    onCharSelected: PropTypes.func
 }
 
 export default CharList;
