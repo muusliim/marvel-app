@@ -1,5 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect} from 'react';
+import { Link } from 'react-router-dom';
 import useMarvelService from '../../services/MarvelService';
+
 
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
@@ -63,12 +65,12 @@ const View = ({char}) => {
                 <div>
                     <div className="char__info-name">{name}</div>
                     <div className="char__btns">
-                        <a href={homepage} className="button button__main">
+                        <Link to={homepage} className="button button__main">
                             <div className="inner">homepage</div>
-                        </a>
-                        <a href={wiki} className="button button__secondary">
+                        </Link>
+                        <Link to={wiki} className="button button__secondary">
                             <div className="inner">Wiki</div>
-                        </a>
+                        </Link>
                     </div>
                 </div>
             </div>
@@ -80,10 +82,15 @@ const View = ({char}) => {
                 {comics.length === 0 ? 'There is no comics with this character' : null}
                 {
                     comics.map((item, i) => {
+                        const comicId = item.resourceURI.split('/').pop();
                         return (
-                            <li key={i} className ="char__comics-item">
+                            <Link 
+                                to={`/comics/${comicId}`} 
+                                key={i}  
+                                className ="char__comics-item"
+                            >
                                 {item.name}
-                            </li>
+                            </Link>
                         )
                     })
                 }
