@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import {motion} from 'framer-motion';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import useMarvelService from '../../services/MarvelService';
 import Spinner from '../spinner/Spinner';
@@ -47,16 +48,19 @@ const CharList = (props) => {
             }
 
             return (
-            <li 
+            <motion.li 
                 className='char__item'
                 key={item.id}
                 tabIndex={0}
                 onClick={() => {props.onCharSelected(item.id)}}
                 onFocus={() => props.onCharSelected(item.id)}
+                initial={{opacity:0}}
+                animate={{opacity:1}}
+                transition={{duration:1}}
                 >
                     <img src={item.thumbnail} alt={item.name} style={imgStyle}/>
                     <div className="char__name">{item.name}</div>
-            </li>
+            </motion.li>
             )
         });
 

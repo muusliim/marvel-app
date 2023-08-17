@@ -1,4 +1,5 @@
 import './randomChar.scss';
+import {motion} from 'framer-motion';
 import mjolnir from '../../resources/img/mjolnir.png';
 import useMarvelService from '../../services/MarvelService';
 import ErrorMessage from '../errorMessage/ErrorMessage';
@@ -69,7 +70,14 @@ const View = ({char}) => {
     }
     
     return (
-        <div className="randomchar__block">
+        <motion.div className="randomchar__block"
+        initial={{ opacity: 0, scale: 0.5 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{
+          duration: 0.8,
+          delay: 0.5,
+          ease: [0, 0.71, 0.2, 1.01]}}
+        >
         <img src={thumbnail} alt="Random character" style={style} className="randomchar__img"/>
         <div className="randomchar__info">
             <p className="randomchar__name">{name}</p>
@@ -85,7 +93,7 @@ const View = ({char}) => {
                 </a>
             </div>
         </div>
-    </div> 
+    </motion.div> 
     )
 }
 
