@@ -60,14 +60,16 @@ const RandomChar = () =>{
 }
 
 const View = ({char}) => {
-    const {name, description, thumbnail, homepage, wiki} = char;
-
+    const {name, thumbnail, homepage, wiki} = char;       
+    let {description} = char;
     let style = {};
     if (thumbnail === "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg") {
         style = {objectFit:'contain'};
     } else {
         style = {objectFit: 'cover'};
     }
+    
+
     
     return (
         <motion.div className="randomchar__block"
@@ -82,7 +84,7 @@ const View = ({char}) => {
         <div className="randomchar__info">
             <p className="randomchar__name">{name}</p>
             <p className="randomchar__descr">
-                 {description}
+            {description}
             </p>
             <div className="randomchar__btns">
                 <a href={homepage}  className="button button__main">

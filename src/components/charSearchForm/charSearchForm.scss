@@ -1,0 +1,56 @@
+@import '../../style/variables.scss';
+
+
+.char{
+    &__search{
+        &-form{
+            width: 425px;
+            position: sticky;
+            z-index: 5;
+            padding:25px;
+            margin-top: 30px;
+            background: #FFF;
+            box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.25);
+        }
+        &-wrapper{
+            display: flex;
+            justify-content:space-between;
+            margin-top: 17px;
+        }
+        &-label{
+            color: #000;
+            font-family: Roboto Condensed;
+            font-size: 18px;
+            font-weight: 700;
+        }
+        &-field{
+            width: 250px;
+            height: 38px;
+            padding-left: 10px;
+            background: #FFF;
+            border:none;
+            box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+        }
+        &-success{
+            color: #03710E;
+            font-family: Roboto Condensed;
+            font-size: 18px;
+            font-weight: 700;
+            margin-top: 12px;
+        }
+        &-fail{
+            color:$main-color ;
+            font-family: Roboto Condensed;
+            font-size: 18px;
+            font-weight: 700;
+            margin-top: 12px;
+        }
+        &-error{
+            color:$main-color;
+            font-family: Roboto Condensed;
+            font-size: 18px;
+            font-weight: 700;
+            margin-top: 12px;
+        }
+    }
+}
