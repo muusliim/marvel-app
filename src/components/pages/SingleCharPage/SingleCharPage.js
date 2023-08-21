@@ -5,8 +5,7 @@ import { Helmet } from 'react-helmet';
 const SingleCharPage = ({data}) => {
     const {name, description, thumbnail} = data;
 
-    return (
-        
+    return (  
         <div className="single-comic">
             <Helmet>
                 <meta
