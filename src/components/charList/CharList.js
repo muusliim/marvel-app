@@ -1,12 +1,26 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {motion} from 'framer-motion';
-import ErrorMessage from '../errorMessage/ErrorMessage';
 import useMarvelService from '../../services/MarvelService';
-import Spinner from '../spinner/Spinner';
 import PropTypes from 'prop-types'; // ES6
+import Spinner from '../spinner/Spinner';
+import ErrorMessage from '../errorMessage/ErrorMessage';
 
 import './charList.scss';
 
+const setContent = (process, Component, newItemLoading) => {
+    switch (process) {
+        case 'waiting':
+            return <Spinner/>;
+        case 'loading':
+            return newItemLoading ? <Component/> : <Spinner/>;
+        case 'confirmed':
+            return <Component/>
+        case 'error':
+            return <ErrorMessage/>
+        default:
+            throw new Error('Unexpected process state');
+    }
+}
 
 const CharList = (props) => {
 
@@ -15,16 +29,18 @@ const CharList = (props) => {
     const [offset, setOffset] = useState(200);
     const [charEnded, setCharEnded] = useState(false);
 
-    const {error, loading, getAllCharacters} = useMarvelService();
+    const { getAllCharacters, process, setProcess} = useMarvelService();
 
     useEffect(() => {
         onRequest(offset, true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const onRequest = (offset, initial) => {
         initial ? setNewItemLoading(false) : setNewItemLoading(true);
         getAllCharacters(offset)
             .then(onCharListLoaded)
+            .then(() => setProcess('confirmed'))
     }      
 
     const  onCharListLoaded = (newCharList) => {
@@ -54,9 +70,9 @@ const CharList = (props) => {
                 tabIndex={0}
                 onClick={() => {props.onCharSelected(item.id)}}
                 onFocus={() => props.onCharSelected(item.id)}
-                initial={{opacity:0}}
-                animate={{opacity:1}}
-                transition={{duration:1}}
+                // initial={{opacity:0}}
+                // animate={{opacity:1}}
+                // transition={{duration:1}}
                 >
                     <img src={item.thumbnail} alt={item.name} style={imgStyle}/>
                     <div className="char__name">{item.name}</div>
@@ -71,16 +87,15 @@ const CharList = (props) => {
         )
     }
 
-    const items = renderListItems(charList);
+    const elements = useMemo(() => {
+        return setContent(process, () => renderListItems(charList), newItemLoading)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [process])
 
-    const errorMessage = error ? <ErrorMessage/> : null;
-    const spinner = loading && !newItemLoading ? <Spinner/> : null;
 
     return (
         <div className="char__list">
-            {spinner}
-            {errorMessage}
-            {items}
+        {elements}
             <button                  
                 className="button button__main button__long"
                 disabled={newItemLoading}

@@ -4,12 +4,10 @@ import { ComicsPage } from "../pages";
 
 import AppHeader from "../appHeader/AppHeader";
 import Spinner from "../spinner/Spinner";
-import SinglePage from "../pages/SinglePage";
-// import SingleCharPage from "../pages/SingleCharPage/SingleCharPage";
-// import SingleComicsPage from "../pages/singleComicPage/SingleComicsPage";
+import MainPage from "../pages/MainPage";
 
 const Page404 = lazy(() => import('../pages/404.js'));
-const MainPage = lazy(() => import('../pages/MainPage.js'));
+const SinglePage = lazy(() => import('../pages/SinglePage'));
 const SingleCharPage = lazy(() => import('../pages/SingleCharPage/SingleCharPage'));
 const SingleComicsPage = lazy(() => import('../pages/singleComicPage/SingleComicsPage'));
 

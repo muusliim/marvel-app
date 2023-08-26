@@ -2,10 +2,9 @@ import './randomChar.scss';
 import {motion} from 'framer-motion';
 import mjolnir from '../../resources/img/mjolnir.png';
 import useMarvelService from '../../services/MarvelService';
-import ErrorMessage from '../errorMessage/ErrorMessage';
+import setContent from '../../utils/setContent';
 
 import React, { useState, useRef, useEffect } from 'react';
-import Spinner from '../spinner/Spinner';
 
 const RandomChar = () =>{
 
@@ -14,7 +13,7 @@ const RandomChar = () =>{
     const myRef = useRef(null);
 
 
-    const {loading, error, getCharacter, clearError} = useMarvelService(); 
+    const {loading, error, getCharacter, clearError, process, setProcess} = useMarvelService(); 
 
     const onCharLoaded = (char) => {
         setChar(char);
@@ -25,6 +24,7 @@ const RandomChar = () =>{
         const id = Math.floor(Math.random() * (1011400 - 1011000)) + 1011000;
         getCharacter(id)
             .then(onCharLoaded)
+            .then(() => setProcess('confirmed')) 
     }
 
     useEffect(() => {
@@ -33,15 +33,9 @@ const RandomChar = () =>{
     }, [])
 
 
-    const errorMessage = error ? <ErrorMessage/> : null;
-    const spinner = loading ? <Spinner/> : null;
-    const content = (!loading && !error) ? <View char={char}/> : null;
-
     return (
         <div className="randomchar">
-            {errorMessage}
-            {spinner}
-            {content}
+            {setContent(process, View, char)}
             <div className="randomchar__static">
                 <p className="randomchar__title">
                     Random character for today!<br/>
@@ -59,9 +53,9 @@ const RandomChar = () =>{
     )
 }
 
-const View = ({char}) => {
-    const {name, thumbnail, homepage, wiki} = char;       
-    let {description} = char;
+const View = ({data}) => {
+    const {name, thumbnail, homepage, wiki} = data;       
+    let {description} = data;
     let style = {};
     if (thumbnail === "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg") {
         style = {objectFit:'contain'};
